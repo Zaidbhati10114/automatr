@@ -1,0 +1,15 @@
+import { SignupForm } from "@/features/auth/components/signup-form";
+import { requireUnAuth } from "@/lib/auth-utils";
+
+const Page = async () => {
+  await requireUnAuth();
+  return (
+    <div className="bg-background flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <SignupForm />
+      </div>
+    </div>
+  );
+};
+
+export default Page;
