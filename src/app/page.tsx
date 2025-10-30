@@ -1,27 +1,22 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
-import { requireUnAuth } from "@/lib/auth-utils";
-import { useTRPC } from "@/trpc/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { trpc } from "@/trpc/client";
 
 const Page = () => {
-  // await requireUnAuth();
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-  const { data } = useQuery(trpc.getWorkflows.queryOptions());
-  const create = useMutation(
-    trpc.createWorkflow.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries(trpc.getWorkflows.queryOptions());
-      },
-    })
-  );
+  const utils = trpc.useUtils();
+  const { data } = trpc.getWorkflows.useQuery();
+  const testAi = trpc.testAi.useMutation();
+  const create = trpc.createWorkflow.useMutation({
+    onSuccess: () => {
+      utils.getWorkflows.invalidate();
+    },
+  });
 
   return (
     <div className="min-h-screen p-4 flex flex-col items-center justify-center">
-      {/* {JSON.stringify(data)}
-      {data && <Button onClick={() => authClient.signOut()}>Log out </Button>} */}
+      <Button disabled={testAi.isPending} onClick={() => testAi.mutate()}>
+        Test Ai
+      </Button>
       protected page
       {JSON.stringify(data, null, 2)}
       <Button disabled={create.isPending} onClick={() => create.mutate()}>
