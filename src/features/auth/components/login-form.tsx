@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/form";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -38,6 +39,16 @@ export function LoginForm() {
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const session = await authClient.getSession();
+      if (session.data) {
+        router.push("/");
+      }
+    };
+    checkAuth();
+  }, [router]);
 
   const onSubmit = async (values: LoginFormValues) => {
     await authClient.signIn.email(
