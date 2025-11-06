@@ -4,7 +4,7 @@ import { redirect } from "next/navigation"
 
 
 
-export const requireUnAuth = async () => {
+export const requireAuth = async () => {
     const session = await auth.api.getSession({
         headers: await headers(),
     })
