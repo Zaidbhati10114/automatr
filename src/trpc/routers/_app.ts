@@ -1,4 +1,5 @@
 
+<<<<<<< Updated upstream
 import { inngest } from '@/inngest/client';
 import { baseProcedure, createTRPCRouter, premiumProcedure, protectedProcedure } from '../init';
 import prisma from '@/lib/db';
@@ -28,6 +29,14 @@ export const appRouter = createTRPCRouter({
             }
         })
     })
+=======
+import { workflowsRouter } from '@/features/workflows/server/routers';
+import { createTRPCRouter } from '../init';
+
+
+export const appRouter = createTRPCRouter({
+    workflows: workflowsRouter,
+>>>>>>> Stashed changes
 });
 // export type definition of API
-export type AppRouter = typeof appRouter;
+export type AppRouter = typeof appRouter; 
