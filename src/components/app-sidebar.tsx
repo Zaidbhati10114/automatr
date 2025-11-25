@@ -25,6 +25,7 @@ import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import { Spinner } from "./ui/spinner";
 import { toast } from "sonner";
+import { useHasActiveSubscription } from "@/features/subscriptions/hooks/use-subscription";
 
 const menuItems = [
   {
@@ -51,6 +52,7 @@ const menuItems = [
 
 export const AppSidebar = () => {
   const [loading, setLoading] = useState(false);
+  const { hasActiveSubscription, isLoading } = useHasActiveSubscription();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -125,19 +127,21 @@ export const AppSidebar = () => {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              tooltip={"Pro"}
-              className="gap-x-4 h-10 px-4"
-              onClick={() => {}}
-            >
-              <StarIcon className="h-4 w-4" />
-              <span>Upgrade to Pro</span>
-            </SidebarMenuButton>
+            {!hasActiveSubscription && !isLoading && (
+              <SidebarMenuButton
+                tooltip={"Pro"}
+                className="gap-x-4 h-10 px-4"
+                onClick={() => authClient.checkout({ slug: "pro" })}
+              >
+                <StarIcon className="h-4 w-4" />
+                <span>Upgrade to Pro</span>
+              </SidebarMenuButton>
+            )}
 
             <SidebarMenuButton
               tooltip={"Billing Portal"}
               className="gap-x-4 h-10 px-4"
-              onClick={() => {}}
+              onClick={() => authClient.customer.portal()}
             >
               <CreditCardIcon className="h-4 w-4" />
               <span>Billing Portal</span>
