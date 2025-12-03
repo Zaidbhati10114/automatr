@@ -22,7 +22,6 @@ import { useWorkflowsParams } from "../hooks/use-workflows-params";
 import { useEntitySearch } from "@/hooks/use-entity-search";
 import { Workflow } from "@/generated/prisma";
 import { WorkflowIcon } from "lucide-react";
-import { TrueKeys } from "../../../generated/prisma/index";
 
 export const WorkFlowSearch = () => {
   const [params, setParams] = useWorkflowsParams();
