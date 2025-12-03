@@ -22,7 +22,7 @@ export const useCreateWorkflow = () => {
     return useMutation(trpc.workflows.create.mutationOptions({
         onSuccess: (data: any) => {
             toast.success(`Workflow "${data.name}" created successfully`)
-            queryCLient.invalidateQueries({})
+            queryCLient.invalidateQueries(trpc.workflows.getMany.queryOptions({}))
         },
 
         onError: (error: any) => {
@@ -44,6 +44,32 @@ export const useDeleteWorkflow = () => {
 
         onError: (error: any) => {
             toast.error(`Error removing workflow: ${error.message}`)
+        }
+
+    }))
+}
+
+// HOOK to fetch single workflow
+
+export const useSuspenseSingleWorkflow = (id: string) => {
+    const trpc = useTRPC();
+    return useSuspenseQuery(trpc.workflows.getOne.queryOptions({ id }))
+}
+
+
+export const useUpdateWorkflowName = () => {
+    const queryCLient = useQueryClient();
+    const [params] = useWorkflowsParams()
+    const trpc = useTRPC()
+    return useMutation(trpc.workflows.updateName.mutationOptions({
+        onSuccess: (data: any) => {
+            toast.success(`Workflow "${data.name}" updated successfully`)
+            queryCLient.invalidateQueries(trpc.workflows.getMany.queryOptions({}))
+            queryCLient.invalidateQueries(trpc.workflows.getOne.queryOptions({ id: data.id }))
+        },
+
+        onError: (error: any) => {
+            toast.error(`Error updating workflow: ${error.message}`)
         }
 
     }))
