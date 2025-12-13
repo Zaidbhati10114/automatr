@@ -15,34 +15,46 @@ interface WorkflowNodeProps {
 
 export const WorkflowNode = ({
   children,
-  showToolbar,
+  showToolbar = true,
   onDelete,
   onSettings,
   name,
   description,
 }: WorkflowNodeProps) => {
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent React Flow from capturing the event
+    e.preventDefault();
+    console.log("Delete clicked in WorkflowNode");
+    onDelete?.();
+  };
   return (
     <>
+      {/* -------- TOP TOOLBAR -------- */}
       {showToolbar && (
-        <NodeToolbar>
-          <Button size={"sm"} variant={"ghost"} onClick={onSettings}>
+        <NodeToolbar isVisible>
+          <Button size="sm" variant="ghost" onClick={onSettings}>
             <SettingsIcon className="size-4" />
           </Button>
-          <Button size={"sm"} variant={"ghost"} onClick={onDelete}>
+
+          <Button size="sm" variant="ghost" onClick={handleDelete}>
             <TrashIcon className="size-4" />
           </Button>
         </NodeToolbar>
       )}
+
+      {/* -------- NODE CONTENT -------- */}
       {children}
-      {name && (
+
+      {/* -------- BOTTOM LABEL TOOLBAR -------- */}
+      {(name || description) && (
         <NodeToolbar
-          position={Position.Bottom}
           isVisible
-          className="max-w-[200px] text-center"
+          position={Position.Bottom}
+          className="z-50 flex flex-col items-center text-center"
         >
-          <p className="font-medium">{name}</p>
+          {name && <p className="font-medium">{name}</p>}
           {description && (
-            <p className="text-muted-foreground truncate text-sm">
+            <p className="text-muted-foreground text-sm truncate w-full">
               {description}
             </p>
           )}
